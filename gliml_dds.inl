@@ -6,21 +6,172 @@
 inline bool
 is_dds(const void* data, unsigned int byteSize) {
     if (byteSize > sizeof(dds_header)) {
-        const dds_header* hdr = (const dds_header*) data;
+        const dds_header* hdr = (const dds_header*)data;
         return hdr->dwMagicFourCC == ' SDD';
     }
     return false;
 }
+
+inline bool
+is_dds_dx10(const dds_header* hdr) {
+    return hdr->ddspf.dwFlags & GLIML_DDSF_FOURCC && hdr->ddspf.dwFourCC == GLIML_FOURCC_DXT10;
+}
+
+
+inline int
+bytes_per_element_DXGI(DXGI_FORMAT format) {
+    switch (format) {
+    case DXGI_FORMAT_R32G32B32A32_TYPELESS:
+    case DXGI_FORMAT_R32G32B32A32_FLOAT:
+    case DXGI_FORMAT_R32G32B32A32_UINT:
+    case DXGI_FORMAT_R32G32B32A32_SINT:
+    case DXGI_FORMAT_BC2_TYPELESS:
+    case DXGI_FORMAT_BC2_UNORM:
+    case DXGI_FORMAT_BC2_UNORM_SRGB:
+    case DXGI_FORMAT_BC3_TYPELESS:
+    case DXGI_FORMAT_BC3_UNORM:
+    case DXGI_FORMAT_BC3_UNORM_SRGB:
+    case DXGI_FORMAT_BC5_TYPELESS:
+    case DXGI_FORMAT_BC5_UNORM:
+    case DXGI_FORMAT_BC5_SNORM:
+    case DXGI_FORMAT_BC6H_TYPELESS:
+    case DXGI_FORMAT_BC6H_UF16:
+    case DXGI_FORMAT_BC6H_SF16:
+    case DXGI_FORMAT_BC7_TYPELESS:
+    case DXGI_FORMAT_BC7_UNORM:
+    case DXGI_FORMAT_BC7_UNORM_SRGB:
+        return 16;
+
+    case DXGI_FORMAT_R32G32B32_TYPELESS:
+    case DXGI_FORMAT_R32G32B32_FLOAT:
+    case DXGI_FORMAT_R32G32B32_UINT:
+    case DXGI_FORMAT_R32G32B32_SINT:
+        return 12;
+
+    case DXGI_FORMAT_R16G16B16A16_TYPELESS:
+    case DXGI_FORMAT_R16G16B16A16_FLOAT:
+    case DXGI_FORMAT_R16G16B16A16_UNORM:
+    case DXGI_FORMAT_R16G16B16A16_UINT:
+    case DXGI_FORMAT_R16G16B16A16_SNORM:
+    case DXGI_FORMAT_R16G16B16A16_SINT:
+    case DXGI_FORMAT_R32G32_TYPELESS:
+    case DXGI_FORMAT_R32G32_FLOAT:
+    case DXGI_FORMAT_R32G32_UINT:
+    case DXGI_FORMAT_R32G32_SINT:
+    case DXGI_FORMAT_R32G8X24_TYPELESS:
+    case DXGI_FORMAT_Y416:
+    case DXGI_FORMAT_Y210:
+    case DXGI_FORMAT_Y216:
+    case DXGI_FORMAT_BC1_TYPELESS:
+    case DXGI_FORMAT_BC1_UNORM:
+    case DXGI_FORMAT_BC1_UNORM_SRGB:
+    case DXGI_FORMAT_BC4_UNORM:
+    case DXGI_FORMAT_BC4_SNORM:
+    case DXGI_FORMAT_BC4_TYPELESS:
+        return 8;
+
+    case DXGI_FORMAT_R8G8_TYPELESS:
+    case DXGI_FORMAT_R8G8_UNORM:
+    case DXGI_FORMAT_R8G8_UINT:
+    case DXGI_FORMAT_R8G8_SNORM:
+    case DXGI_FORMAT_R8G8_SINT:
+    case DXGI_FORMAT_R16_TYPELESS:
+    case DXGI_FORMAT_R16_FLOAT:
+    case DXGI_FORMAT_D16_UNORM:
+    case DXGI_FORMAT_R16_UNORM:
+    case DXGI_FORMAT_R16_UINT:
+    case DXGI_FORMAT_R16_SNORM:
+    case DXGI_FORMAT_R16_SINT:
+    case DXGI_FORMAT_B5G6R5_UNORM:
+    case DXGI_FORMAT_B5G5R5A1_UNORM:
+    case DXGI_FORMAT_P010:
+    case DXGI_FORMAT_P016:
+    case DXGI_FORMAT_A8P8:
+    case DXGI_FORMAT_B4G4R4A4_UNORM:
+        return 2;
+
+    case DXGI_FORMAT_R8_TYPELESS:
+    case DXGI_FORMAT_R8_UNORM:
+    case DXGI_FORMAT_R8_UINT:
+    case DXGI_FORMAT_R8_SNORM:
+    case DXGI_FORMAT_R8_SINT:
+    case DXGI_FORMAT_A8_UNORM:
+    case DXGI_FORMAT_NV12:
+    case DXGI_FORMAT_420_OPAQUE:
+    case DXGI_FORMAT_NV11:
+    case DXGI_FORMAT_AI44:
+    case DXGI_FORMAT_IA44:
+    case DXGI_FORMAT_P8:
+    case DXGI_FORMAT_P208:
+    case DXGI_FORMAT_V208:
+    case DXGI_FORMAT_V408:
+        return 1;
+
+    case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+    case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+    case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+    case DXGI_FORMAT_R10G10B10A2_TYPELESS:
+    case DXGI_FORMAT_R10G10B10A2_UNORM:
+    case DXGI_FORMAT_R10G10B10A2_UINT:
+    case DXGI_FORMAT_R11G11B10_FLOAT:
+    case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+    case DXGI_FORMAT_R8G8B8A8_UNORM:
+    case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+    case DXGI_FORMAT_R8G8B8A8_UINT:
+    case DXGI_FORMAT_R8G8B8A8_SNORM:
+    case DXGI_FORMAT_R8G8B8A8_SINT:
+    case DXGI_FORMAT_R16G16_TYPELESS:
+    case DXGI_FORMAT_R16G16_FLOAT:
+    case DXGI_FORMAT_R16G16_UNORM:
+    case DXGI_FORMAT_R16G16_UINT:
+    case DXGI_FORMAT_R16G16_SNORM:
+    case DXGI_FORMAT_R16G16_SINT:
+    case DXGI_FORMAT_R32_TYPELESS:
+    case DXGI_FORMAT_D32_FLOAT:
+    case DXGI_FORMAT_R32_FLOAT:
+    case DXGI_FORMAT_R32_UINT:
+    case DXGI_FORMAT_R32_SINT:
+    case DXGI_FORMAT_D24_UNORM_S8_UINT:
+    case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+    case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+    case DXGI_FORMAT_B8G8R8A8_UNORM:
+    case DXGI_FORMAT_B8G8R8X8_UNORM:
+    case DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM:
+    case DXGI_FORMAT_B8G8R8A8_TYPELESS:
+    case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
+    case DXGI_FORMAT_B8G8R8X8_TYPELESS:
+    case DXGI_FORMAT_B8G8R8X8_UNORM_SRGB:
+    case DXGI_FORMAT_AYUV:
+    case DXGI_FORMAT_Y410:
+    case DXGI_FORMAT_YUY2:
+        return 4;
+
+    case DXGI_FORMAT_R1_UNORM:
+    case DXGI_FORMAT_FORCE_UINT:
+        GLIML_ASSERT("Unsupported texture format");
+        return 0;
+    }
+    GLIML_ASSERT("Missing DXGI Enum");
+    return 0;
+}
+
+
 
 //------------------------------------------------------------------------------
 inline bool
 context::load_dds(const void* data, unsigned int byteSize) {
     GLIML_ASSERT(gliml::is_dds(data, byteSize));
     this->clear();
-    
-    const dds_header* hdr = (const dds_header*) data;
-    const unsigned char* dataBytePtr = (const unsigned char*) hdr;
+
+    const dds_header* hdr = (const dds_header*)data;
+    const unsigned char* dataBytePtr = (const unsigned char*)hdr;
     dataBytePtr += sizeof(dds_header);
+
+    const dds_header_dxt10* hdr_dx10 = nullptr;
+    if (is_dds_dx10(hdr)) {
+        hdr_dx10 = (const dds_header_dxt10*)dataBytePtr;
+        dataBytePtr += sizeof(dds_header_dxt10);
+    }
 
     // cubemap?
     bool isCubeMap = false;
@@ -45,7 +196,7 @@ context::load_dds(const void* data, unsigned int byteSize) {
         this->is3D = false;
         this->numFaces = 1;
     }
-    
+
     // image format
     int bytesPerElement = 0;
     if (hdr->ddspf.dwFlags & GLIML_DDSF_FOURCC) {
@@ -53,20 +204,82 @@ context::load_dds(const void* data, unsigned int byteSize) {
         if (!this->dxtEnabled) {
             this->errorCode = GLIML_ERROR_DXT_NOT_ENABLED;
             return false;
-        }    
-        this->isCompressed = true;
+        }
         switch (hdr->ddspf.dwFourCC) {
             case GLIML_FOURCC_DXT1:
                 this->format = this->internalFormat = GLIML_GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+                this->isCompressed = true;
                 bytesPerElement = 8;
                 break;
             case GLIML_FOURCC_DXT3:
                 this->format = this->internalFormat = GLIML_GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                this->isCompressed = true;
                 bytesPerElement = 16;
                 break;
             case GLIML_FOURCC_DXT5:
                 this->format = this->internalFormat = GLIML_GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+                this->isCompressed = true;
                 bytesPerElement = 16;
+                break;
+            case GLIML_FOURCC_DXT5_xGxR:
+                this->format = this->internalFormat = GLIML_FOURCC_DXT5_xGxR;
+                this->isCompressed = true;
+                bytesPerElement = 16;
+                break;
+            case GLIML_FOURCC_DXT10:
+                this->format = GLIML_FOURCC_DXT10;
+                this->internalFormat = hdr_dx10->dwDxgiFormat;
+                this->isCompressed = true;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)hdr_dx10->dwDxgiFormat);
+                break;
+            // these are pseudo dx10 types, use same mechanic as for those and pretend they are
+            case GLIML_FOURCC_R16G16B16A16_UNORM:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R16G16B16A16_UNORM;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_R16G16B16A16_SNORM:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R16G16B16A16_SNORM;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_R16_FLOAT:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R16_FLOAT;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_R16G16:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R16G16_FLOAT;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_R16G16B16A16:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_R32_FLOAT:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R32_FLOAT;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_R32G32_FLOAT:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R32G32_FLOAT;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_R32G32B32A32_FLOAT:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
                 break;
             default:
                 this->errorCode = GLIML_ERROR_INVALID_COMPRESSED_FORMAT;
@@ -92,7 +305,7 @@ context::load_dds(const void* data, unsigned int byteSize) {
             // OpenGLES style RGBA
             this->format = GLIML_GL_RGBA;
         }
-    }    
+    }
     else if ((hdr->ddspf.dwFlags & GLIML_DDSF_RGB) && (hdr->ddspf.dwRGBBitCount == 24)) {
         // 24-bit RGB, check byte order
         bytesPerElement = 3;
@@ -137,7 +350,7 @@ context::load_dds(const void* data, unsigned int byteSize) {
         }
         else {
             // RGBA4 or BGRA4 or RGBA5551 or BGRA5551
-             this->internalFormat = GLIML_GL_RGBA;
+            this->internalFormat = GLIML_GL_RGBA;
             if (hdr->ddspf.dwRBitMask == 0x00F0) {
                 // Direct3D style bgra4
                 if (this->bgraEnabled) {
@@ -178,7 +391,7 @@ context::load_dds(const void* data, unsigned int byteSize) {
         this->type = GLIML_GL_UNSIGNED_BYTE;
         bytesPerElement = 1;
     }
-    
+
     // for each face...
     int faceIndex;
     for (faceIndex = 0; faceIndex < this->numFaces; faceIndex++) {
@@ -197,12 +410,12 @@ context::load_dds(const void* data, unsigned int byteSize) {
             curFace.target = this->target;
         }
         curFace.numMipmaps = (hdr->dwMipMapCount == 0) ? 1 : hdr->dwMipMapCount;
-        
+
         // for each mipmap
         int mipIndex;
         for (mipIndex = 0; mipIndex < curFace.numMipmaps; mipIndex++) {
             face::mipmap& curMip = curFace.mipmaps[mipIndex];
-            
+
             // mipmap dimensions
             int w = hdr->dwWidth >> mipIndex;
             if (w <= 0) w = 1;
@@ -213,7 +426,7 @@ context::load_dds(const void* data, unsigned int byteSize) {
             curMip.width = w;
             curMip.height = h;
             curMip.depth = d;
-            
+
             // mipmap byte size
             if (this->isCompressed) {
                 curMip.size = ((w+3)/4) * ((h+3)/4) * d * bytesPerElement;
@@ -221,14 +434,14 @@ context::load_dds(const void* data, unsigned int byteSize) {
             else {
                 curMip.size = w * h * d * bytesPerElement;
             }
-            
+
             // set and advance surface data pointer
             curMip.data = dataBytePtr;
             dataBytePtr += curMip.size;
         }
     }
     GLIML_ASSERT(dataBytePtr == ((const unsigned char*)data) + byteSize);
-    
+
     // ...and we're done
     return true;
 }

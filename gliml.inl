@@ -4,10 +4,10 @@
 
 //------------------------------------------------------------------------------
 inline context::context() :
-dxtEnabled(false),
+dxtEnabled(true),
 pvrtcEnabled(false),
 etc2Enabled(false),
-bgraEnabled(false) {
+bgraEnabled(true) {
     this->clear();
 }
 
