@@ -365,11 +365,6 @@ context::load_dds(const void* data, unsigned int byteSize) {
                 this->isCompressed = true;
                 bytesPerElement = 16;
                 break;
-            case GLIML_FOURCC_ATI2:
-                this->format = this->internalFormat = GLIML_FOURCC_ATI2;
-                this->isCompressed = true;
-                bytesPerElement = 16;
-                break;
             case GLIML_FOURCC_BC5S:
                 this->format = this->internalFormat = GLIML_FOURCC_BC5S;
                 this->isCompressed = true;
@@ -383,6 +378,13 @@ context::load_dds(const void* data, unsigned int byteSize) {
                 bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)hdr_dx10->dwDxgiFormat);
                 break;
             // these are pseudo dx10 types, use same mechanic as for those and pretend they are
+            case GLIML_FOURCC_ATI2:
+            case GLIML_FOURCC_BC5U:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = true;
+                this->internalFormat = DXGI_FORMAT_BC5_UNORM;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
             case GLIML_FOURCC_R16G16B16A16_UNORM:
                 this->format = GLIML_FOURCC_DXT10;
                 this->isCompressed = false;
@@ -429,6 +431,12 @@ context::load_dds(const void* data, unsigned int byteSize) {
                 this->format = GLIML_FOURCC_DXT10;
                 this->isCompressed = false;
                 this->internalFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+                bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
+                break;
+            case GLIML_FOURCC_L16:
+                this->format = GLIML_FOURCC_DXT10;
+                this->isCompressed = false;
+                this->internalFormat = DXGI_FORMAT_R16_UINT;
                 bytesPerElement = bytes_per_element_DXGI((DXGI_FORMAT)this->internalFormat);
                 break;
             default:
