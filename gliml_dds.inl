@@ -144,10 +144,17 @@ bytes_per_element_DXGI(DXGI_FORMAT format) {
     case DXGI_FORMAT_AYUV:
     case DXGI_FORMAT_Y410:
     case DXGI_FORMAT_YUY2:
+    case DXGI_FORMAT_R24G8_TYPELESS:
+    case DXGI_FORMAT_R9G9B9E5_SHAREDEXP:
+    case DXGI_FORMAT_R8G8_B8G8_UNORM:
+    case DXGI_FORMAT_G8R8_G8B8_UNORM:
         return 4;
 
     case DXGI_FORMAT_R1_UNORM:
     case DXGI_FORMAT_FORCE_UINT:
+    case DXGI_FORMAT_UNKNOWN:
+    case DXGI_FORMAT_SAMPLER_FEEDBACK_MIN_MIP_OPAQUE:
+    case DXGI_FORMAT_SAMPLER_FEEDBACK_MIP_REGION_USED_OPAQUE:
         GLIML_ASSERT("Unsupported texture format");
         return 0;
     }
@@ -273,10 +280,17 @@ is_compressed_DXGI(DXGI_FORMAT format) {
     case DXGI_FORMAT_AYUV:
     case DXGI_FORMAT_Y410:
     case DXGI_FORMAT_YUY2:
+    case DXGI_FORMAT_R24G8_TYPELESS:
+    case DXGI_FORMAT_R9G9B9E5_SHAREDEXP:
+    case DXGI_FORMAT_R8G8_B8G8_UNORM:
+    case DXGI_FORMAT_G8R8_G8B8_UNORM:
         return false;
 
     case DXGI_FORMAT_R1_UNORM:
     case DXGI_FORMAT_FORCE_UINT:
+    case DXGI_FORMAT_UNKNOWN:
+    case DXGI_FORMAT_SAMPLER_FEEDBACK_MIN_MIP_OPAQUE:
+    case DXGI_FORMAT_SAMPLER_FEEDBACK_MIP_REGION_USED_OPAQUE:
         GLIML_ASSERT("Unsupported texture format");
         return false;
     }
